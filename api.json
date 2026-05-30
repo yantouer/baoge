@@ -1,0 +1,1162 @@
+{
+  "spider": "./jar/custom_spider.jar;md5;01b041f86da9b0aa3c7770e077d70884",
+  "sites": [
+    {
+      "key": "douban",
+      "name": "豆瓣",
+      "type": 3,
+      "api": "csp_Douban",
+      "searchable": 0,
+      "changeable": 1
+    },
+    {
+      "key": "guazi",
+      "name": "瓜子影视",
+      "type": 3,
+      "api": "csp_Gz360",
+      "searchable": 1,
+      "changeable": 1
+    },
+    {
+      "key": "duboku",
+      "name": "独播",
+      "type": 3,
+      "api": "csp_Duboku",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "czsapp",
+      "name": "厂长影视",
+      "type": 3,
+      "api": "csp_Czsapp",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": "https://www.czzymovie.com"
+    },
+    {
+      "key": "jpys",
+      "name": "金牌影视",
+      "type": 3,
+      "api": "csp_Jpys",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "ext": "https://m.610pkea.com,https://y2s52n7.com,https://m.hkybqufgh.com,https://m.sizhengxt.com,https://m.9zhoukj.com,https://m.jiabaide.cn"
+    },
+    {
+      "key": "chaoliu",
+      "name": "潮流影视",
+      "type": 3,
+      "api": "csp_AppRJ",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "ext": {
+        "url": "http://v.rbotv.cn"
+      }
+    },
+    {
+      "key": "sp360",
+      "name": "360影视",
+      "type": 3,
+      "api": "csp_SP360",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 0
+    },
+    {
+      "key": "nongmin",
+      "name": "农民影视",
+      "type": 3,
+      "api": "csp_Wwys",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "ext": "https://vip.wwgz.cn:5200"
+    },
+    {
+      "key": "nongmin_xyq",
+      "name": "农民影视(备)",
+      "type": 3,
+      "api": "csp_XYQHiker",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "ext": {
+        "规则名": "农民影视",
+        "规则作者": "香雅情",
+        "请求头参数": "User-Agent$手机#accept$text/html#Referer$https://vip.wwgz.cn:5200",
+        "网页编码格式": "UTF-8",
+        "图片是否需要代理": "0",
+        "是否开启获取首页数据": "1",
+        "首页推荐链接": "https://vip.wwgz.cn:5200",
+        "首页列表数组规则": "body&&.globalPicList",
+        "首页片单列表数组规则": "li:has(img)",
+        "首页片单是否Jsoup写法": "1",
+        "首页片单标题": ".sTit&&Text",
+        "首页片单链接": "a&&href",
+        "首页片单图片": "img&&data-echo||data-src||src",
+        "首页片单副标题": ".sBottom&&Text",
+        "首页片单链接加前缀": "https://vip.wwgz.cn:5200",
+        "分类起始页码": "1",
+        "分类链接": "https://vip.wwgz.cn:5200/vod-list-id-{cateId}-pg-{catePg}-order--by-{by}-class--year-{year}-letter--area-{area}-lang-.html",
+        "分类名称": "电影&电视剧&综艺&动漫&短剧",
+        "分类名称替换词": "1&2&3&4&26",
+        "筛选数据": "ext",
+        "分类截取模式": "1",
+        "分类列表数组规则": ".globalPicList&&li",
+        "分类片单是否Jsoup写法": "1",
+        "分类片单标题": ".sTit&&Text",
+        "分类片单链接": "a&&href",
+        "分类片单图片": "img&&data-echo||data-src||src",
+        "分类片单副标题": ".sBottom&&Text",
+        "分类片单链接加前缀": "https://vip.wwgz.cn:5200",
+        "search_url": "https://vip.wwgz.cn:5200/index.php?m=vod-search;post",
+        "sea_PtBody": "wd={wd}",
+        "search_mode": "1",
+        "sea_arr_rule": "#data_list&&li",
+        "sea_is_jsoup": "1",
+        "sea_pic": ".lazyload&&data-src",
+        "sea_title": ".sTit&&Text",
+        "sea_url": "a&&href",
+        "搜索片单链接加前缀": "https://vip.wwgz.cn:5200",
+        "链接是否直接播放": "0",
+        "详情是否Jsoup写法": "1",
+        "演员详情": "body&&.sDes:contains(主演:)&&Text!主演:",
+        "简介详情": ".detail-con&&p&&Text!简介:",
+        "线路列表数组规则": "#leftTabBox&&ul&&li",
+        "播放列表数组规则": "#leftTabBox&&.numList",
+        "选集列表数组规则": "li",
+        "选集标题链接是否Jsoup写法": "1",
+        "选集标题": "a&&Text",
+        "选集链接": "a&&href",
+        "是否反转选集序列": "1",
+        "选集链接加前缀": "https://vip.wwgz.cn:5200",
+        "是否开启手动嗅探": "1",
+        "手动嗅探视频链接关键词": ".mp4#.m3u8#item/video#video_mp4#video/tos",
+        "手动嗅探视频链接过滤词": ".html#=http"
+      }
+    },
+    {
+      "key": "saohuo",
+      "name": "骚火影视",
+      "type": 3,
+      "api": "csp_SaoHuo",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "ext": "https://shdy5.us"
+    },
+    {
+      "key": "manbo",
+      "name": "曼波动漫",
+      "type": 3,
+      "api": "csp_AppGet",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "ext": {
+        "url": "https://app.omofun1.top",
+        "dataKey": "66dc309cbeeca454",
+        "dataIv": "66dc309cbeeca454"
+      }
+    },
+    {
+      "key": "gugu",
+      "name": "咕咕动漫",
+      "type": 3,
+      "api": "csp_AppGet",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "ext": {
+        "url": "https://www.gugu3.com",
+        "dataKey": "nKfZ8KX6JTNWRzTD",
+        "dataIv": "nKfZ8KX6JTNWRzTD"
+      }
+    },
+    {
+      "key": "kanqiu",
+      "name": "看球",
+      "type": 3,
+      "api": "csp_Kanqiu",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 0,
+      "style": {
+        "type": "list"
+      }
+    },
+    {
+      "key": "tingshijie",
+      "name": "听世界",
+      "type": 3,
+      "api": "csp_TingShijie",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 0
+    },
+    {
+      "key": "jianpian",
+      "name": "荐片",
+      "type": 3,
+      "api": "csp_JianPian",
+      "searchable": 1,
+      "changeable": 1,
+      "ext": {
+        "1": [
+          {
+            "key": "area",
+            "name": "地區",
+            "init": "1",
+            "value": [
+              {
+                "n": "全部",
+                "v": "0"
+              },
+              {
+                "n": "国产",
+                "v": "1"
+              },
+              {
+                "n": "中国香港",
+                "v": "3"
+              },
+              {
+                "n": "中国台湾",
+                "v": "6"
+              },
+              {
+                "n": "美国",
+                "v": "5"
+              },
+              {
+                "n": "韩国",
+                "v": "18"
+              },
+              {
+                "n": "日本",
+                "v": "2"
+              }
+            ]
+          },
+          {
+            "key": "year",
+            "name": "年份",
+            "value": [
+              {
+                "n": "全部",
+                "v": "0"
+              },
+              {
+                "n": "2026",
+                "v": "162"
+              },
+              {
+                "n": "2025",
+                "v": "107"
+              },
+              {
+                "n": "2024",
+                "v": "119"
+              },
+              {
+                "n": "2023",
+                "v": "153"
+              },
+              {
+                "n": "2022",
+                "v": "101"
+              },
+              {
+                "n": "2021",
+                "v": "118"
+              },
+              {
+                "n": "2020",
+                "v": "16"
+              },
+              {
+                "n": "2019",
+                "v": "7"
+              },
+              {
+                "n": "2018",
+                "v": "2"
+              },
+              {
+                "n": "2017",
+                "v": "3"
+              },
+              {
+                "n": "2016",
+                "v": "22"
+              }
+            ]
+          },
+          {
+            "key": "by",
+            "name": "排序",
+            "init": "updata",
+            "value": [
+              {
+                "n": "热门",
+                "v": "hot"
+              },
+              {
+                "n": "更新",
+                "v": "updata"
+              },
+              {
+                "n": "评分",
+                "v": "rating"
+              }
+            ]
+          }
+        ],
+        "2": [
+          {
+            "key": "area",
+            "name": "地區",
+            "init": "1",
+            "value": [
+              {
+                "n": "全部",
+                "v": "0"
+              },
+              {
+                "n": "国产",
+                "v": "1"
+              },
+              {
+                "n": "中国香港",
+                "v": "3"
+              },
+              {
+                "n": "中国台湾",
+                "v": "6"
+              },
+              {
+                "n": "美国",
+                "v": "5"
+              },
+              {
+                "n": "韩国",
+                "v": "18"
+              },
+              {
+                "n": "日本",
+                "v": "2"
+              }
+            ]
+          },
+          {
+            "key": "year",
+            "name": "年份",
+            "value": [
+              {
+                "n": "全部",
+                "v": "0"
+              },
+              {
+                "n": "2026",
+                "v": "162"
+              },
+              {
+                "n": "2025",
+                "v": "107"
+              },
+              {
+                "n": "2024",
+                "v": "119"
+              },
+              {
+                "n": "2023",
+                "v": "153"
+              },
+              {
+                "n": "2022",
+                "v": "101"
+              },
+              {
+                "n": "2021",
+                "v": "118"
+              },
+              {
+                "n": "2020",
+                "v": "16"
+              },
+              {
+                "n": "2019",
+                "v": "7"
+              },
+              {
+                "n": "2018",
+                "v": "2"
+              },
+              {
+                "n": "2017",
+                "v": "3"
+              },
+              {
+                "n": "2016",
+                "v": "22"
+              }
+            ]
+          },
+          {
+            "key": "by",
+            "name": "排序",
+            "init": "updata",
+            "value": [
+              {
+                "n": "热门",
+                "v": "hot"
+              },
+              {
+                "n": "更新",
+                "v": "updata"
+              },
+              {
+                "n": "评分",
+                "v": "rating"
+              }
+            ]
+          }
+        ],
+        "3": [
+          {
+            "key": "area",
+            "name": "地區",
+            "init": "1",
+            "value": [
+              {
+                "n": "全部",
+                "v": "0"
+              },
+              {
+                "n": "国产",
+                "v": "1"
+              },
+              {
+                "n": "中国香港",
+                "v": "3"
+              },
+              {
+                "n": "中国台湾",
+                "v": "6"
+              },
+              {
+                "n": "美国",
+                "v": "5"
+              },
+              {
+                "n": "韩国",
+                "v": "18"
+              },
+              {
+                "n": "日本",
+                "v": "2"
+              }
+            ]
+          },
+          {
+            "key": "year",
+            "name": "年份",
+            "value": [
+              {
+                "n": "全部",
+                "v": "0"
+              },
+              {
+                "n": "2026",
+                "v": "162"
+              },
+              {
+                "n": "2025",
+                "v": "107"
+              },
+              {
+                "n": "2024",
+                "v": "119"
+              },
+              {
+                "n": "2023",
+                "v": "153"
+              },
+              {
+                "n": "2022",
+                "v": "101"
+              },
+              {
+                "n": "2021",
+                "v": "118"
+              },
+              {
+                "n": "2020",
+                "v": "16"
+              },
+              {
+                "n": "2019",
+                "v": "7"
+              },
+              {
+                "n": "2018",
+                "v": "2"
+              },
+              {
+                "n": "2017",
+                "v": "3"
+              },
+              {
+                "n": "2016",
+                "v": "22"
+              }
+            ]
+          },
+          {
+            "key": "by",
+            "name": "排序",
+            "init": "updata",
+            "value": [
+              {
+                "n": "热门",
+                "v": "hot"
+              },
+              {
+                "n": "更新",
+                "v": "updata"
+              },
+              {
+                "n": "评分",
+                "v": "rating"
+              }
+            ]
+          }
+        ],
+        "4": [
+          {
+            "key": "area",
+            "name": "地區",
+            "init": "1",
+            "value": [
+              {
+                "n": "全部",
+                "v": "0"
+              },
+              {
+                "n": "国产",
+                "v": "1"
+              },
+              {
+                "n": "中国香港",
+                "v": "3"
+              },
+              {
+                "n": "中国台湾",
+                "v": "6"
+              },
+              {
+                "n": "美国",
+                "v": "5"
+              },
+              {
+                "n": "韩国",
+                "v": "18"
+              },
+              {
+                "n": "日本",
+                "v": "2"
+              }
+            ]
+          },
+          {
+            "key": "year",
+            "name": "年份",
+            "value": [
+              {
+                "n": "全部",
+                "v": "0"
+              },
+              {
+                "n": "2026",
+                "v": "162"
+              },
+              {
+                "n": "2025",
+                "v": "107"
+              },
+              {
+                "n": "2024",
+                "v": "119"
+              },
+              {
+                "n": "2023",
+                "v": "153"
+              },
+              {
+                "n": "2022",
+                "v": "101"
+              },
+              {
+                "n": "2021",
+                "v": "118"
+              },
+              {
+                "n": "2020",
+                "v": "16"
+              },
+              {
+                "n": "2019",
+                "v": "7"
+              },
+              {
+                "n": "2018",
+                "v": "2"
+              },
+              {
+                "n": "2017",
+                "v": "3"
+              },
+              {
+                "n": "2016",
+                "v": "22"
+              }
+            ]
+          },
+          {
+            "key": "by",
+            "name": "排序",
+            "init": "updata",
+            "value": [
+              {
+                "n": "热门",
+                "v": "hot"
+              },
+              {
+                "n": "更新",
+                "v": "updata"
+              },
+              {
+                "n": "评分",
+                "v": "rating"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "key": "biliys",
+      "name": "哔哩视频",
+      "type": 3,
+      "api": "csp_BiliYS",
+      "searchable": 1,
+      "quickSearch": 0,
+      "filterable": 1,
+      "changeable": 0,
+      "style": {
+        "type": "rect",
+        "ratio": 1.433
+      },
+      "ext": {
+        "json": "./json/bili_video.json",
+        "cookie": "http://127.0.0.1:9978/file/TVBox/bili_cookie.txt"
+      }
+    },
+    {
+      "key": "tencent",
+      "name": "腾讯视频",
+      "type": 3,
+      "api": "./js/drpy2.min.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": "./js/腾讯视频.js"
+    },
+    {
+      "key": "youku",
+      "name": "优酷视频",
+      "type": 3,
+      "api": "./js/drpy2.min.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": "./js/优酷视频.js"
+    },
+    {
+      "key": "mgtv",
+      "name": "芒果视频",
+      "type": 3,
+      "api": "./js/drpy2.min.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": "./js/芒果视频.js"
+    },
+    {
+      "key": "iqiyi",
+      "name": "爱奇艺",
+      "type": 3,
+      "api": "./js/drpy2.min.js",
+      "searchable": 1,
+      "quickSearch": 1,
+      "filterable": 1,
+      "changeable": 1,
+      "ext": "./js/爱奇艺.js"
+    },
+    {
+      "key": "config",
+      "name": "配置中心",
+      "type": 3,
+      "api": "csp_Config",
+      "searchable": 0,
+      "changeable": 0,
+      "indexs": 0,
+      "style": {
+        "type": "rect",
+        "ratio": 1.597
+      }
+    }
+  ],
+  "lives": [
+    {
+      "name": "IPTV",
+      "type": 0,
+      "url": "https://gongdian.top/tv/iptv",
+      "playerType": 1,
+      "logo": "https://gongdian.top/tv/taibiao/{name}.png"
+    },
+    {
+      "name": "大宝直播源",
+      "type": 0,
+      "url": "https://gt.ifree.fun/https://raw.githubusercontent.com/yantouer/IPTVzidong/refs/heads/main/live.txt"
+    },
+    {
+      "name": "冰茶直播源",
+      "type": 0,
+      "url": "https://bc.188766.xyz/?url=https://live.188766.xyz&mima=bingcha1130"
+    },
+    {
+      "name": "宝哥内网源",
+      "type": 0,
+      "url": "https://fun.ifree.fun/live.m3u"
+    }
+  ],
+  "parses": [
+    {
+      "name": "Web嗅探",
+      "type": 0
+    },
+    {
+      "name": "聚合",
+      "type": 3,
+      "url": "Web"
+    },
+    {
+      "name": "虾米",
+      "type": 0,
+      "url": "https://jx.xmflv.com/?url=",
+      "ext": {
+        "header": {
+          "user-agent": "Mozilla/5.0 (Linux; Android 13; V2049A Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "云解",
+      "type": 0,
+      "url": "https://yparse.ik9.cc/index.php?url=",
+      "ext": {
+        "header": {
+          "user-agent": "Mozilla/5.0 (Linux; Android 13; V2049A Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "咸鱼",
+      "type": 0,
+      "url": "https://jx.xymp4.cc/?url=",
+      "ext": {
+        "header": {
+          "user-agent": "Mozilla/5.0 (Linux; Android 13; V2049A Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "淘片",
+      "type": 0,
+      "url": "https://jx.yparse.com/index.php?url=",
+      "ext": {
+        "header": {
+          "user-agent": "Mozilla/5.0 (Linux; Android 13; V2049A Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "冰豆",
+      "type": 0,
+      "url": "https://bd.jx.cn/?url=",
+      "ext": {
+        "header": {
+          "user-agent": "Mozilla/5.0 (Linux; Android 13; V2049A Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "七七",
+      "type": 0,
+      "url": "https://jx.77flv.cc/?url=",
+      "ext": {
+        "header": {
+          "user-agent": "Mozilla/5.0 (Linux; Android 13; V2049A Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "盘古",
+      "type": 0,
+      "url": "https://www.playm3u8.cn/jiexi.php?url=",
+      "ext": {
+        "header": {
+          "user-agent": "Mozilla/5.0 (Linux; Android 13; V2049A Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36"
+        }
+      }
+    },
+    {
+      "name": "夜幕",
+      "type": 0,
+      "url": "https://yemu.xyz/?url=",
+      "ext": {
+        "header": {
+          "user-agent": "Mozilla/5.0 (Linux; Android 13; V2049A Build/TP1A.220624.014; wv) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/116.0.0.0 Mobile Safari/537.36"
+        }
+      }
+    }
+  ],
+  "rules": [
+    {
+      "name": "农民",
+      "hosts": [
+        "toutiaovod.com"
+      ],
+      "regex": [
+        "video/tos/cn"
+      ]
+    },
+    {
+      "name": "火山",
+      "hosts": [
+        "huoshan.com"
+      ],
+      "regex": [
+        "item_id="
+      ]
+    },
+    {
+      "name": "抖音",
+      "hosts": [
+        "douyin.com"
+      ],
+      "regex": [
+        "is_play_url="
+      ]
+    },
+    {
+      "name": "磁力广告",
+      "hosts": [
+        "magnet"
+      ],
+      "regex": [
+        "更多",
+        "请访问",
+        "example",
+        "社 區",
+        "x u u",
+        "直 播",
+        "更 新",
+        "社 区",
+        "有趣",
+        "有 趣",
+        "英皇体育",
+        "全中文AV在线",
+        "澳门皇冠赌场",
+        "哥哥快来",
+        "美女荷官",
+        "裸聊",
+        "新片首发",
+        "UUE29"
+      ]
+    },
+    {
+      "name": "饭团点击",
+      "hosts": [
+        "dadagui",
+        "freeok"
+      ],
+      "script": [
+        "document.querySelector(\"#playleftiframe\").contentWindow.document.querySelector(\"#start\").click();"
+      ]
+    },
+    {
+      "name": "毛驴点击",
+      "hosts": [
+        "www.maolvys.com"
+      ],
+      "script": [
+        "document.getElementsByClassName('swal-buttonswal-button--confirm')[0].click()"
+      ]
+    }
+  ],
+  "doh": [
+    {
+      "name": "Google",
+      "url": "https://dns.google/dns-query",
+      "ips": [
+        "8.8.4.4",
+        "8.8.8.8"
+      ]
+    },
+    {
+      "name": "Cloudflare",
+      "url": "https://cloudflare-dns.com/dns-query",
+      "ips": [
+        "1.1.1.1",
+        "1.0.0.1",
+        "2606:4700:4700::1111",
+        "2606:4700:4700::1001"
+      ]
+    },
+    {
+      "name": "AdGuard",
+      "url": "https://dns.adguard.com/dns-query",
+      "ips": [
+        "94.140.14.140",
+        "94.140.14.141"
+      ]
+    },
+    {
+      "name": "DNSWatch",
+      "url": "https://resolver2.dns.watch/dns-query",
+      "ips": [
+        "84.200.69.80",
+        "84.200.70.40"
+      ]
+    },
+    {
+      "name": "Quad9",
+      "url": "https://dns.quad9.net/dns-quer",
+      "ips": [
+        "9.9.9.9",
+        "149.112.112.112"
+      ]
+    }
+  ],
+  "flags": [
+    "youku",
+    "优酷",
+    "优 酷",
+    "优酷视频",
+    "qq",
+    "腾讯",
+    "腾 讯",
+    "腾讯视频",
+    "iqiyi",
+    "qiyi",
+    "奇艺",
+    "爱奇艺",
+    "爱 奇 艺",
+    "m1905",
+    "xigua",
+    "letv",
+    "leshi",
+    "乐视",
+    "乐 视",
+    "sohu",
+    "搜狐",
+    "搜 狐",
+    "搜狐视频",
+    "tudou",
+    "pptv",
+    "mgtv",
+    "芒果",
+    "imgo",
+    "芒果TV",
+    "芒 果 T V",
+    "bilibili",
+    "哔 哩",
+    "哔 哩 哔 哩"
+  ],
+  "ijk": [
+    {
+      "group": "软解码",
+      "options": [
+        {
+          "category": 4,
+          "name": "opensles",
+          "value": "0"
+        },
+        {
+          "category": 4,
+          "name": "overlay-format",
+          "value": "842225234"
+        },
+        {
+          "category": 4,
+          "name": "framedrop",
+          "value": "1"
+        },
+        {
+          "category": 4,
+          "name": "soundtouch",
+          "value": "1"
+        },
+        {
+          "category": 4,
+          "name": "start-on-prepared",
+          "value": "1"
+        },
+        {
+          "category": 1,
+          "name": "http-detect-range-support",
+          "value": "0"
+        },
+        {
+          "category": 1,
+          "name": "fflags",
+          "value": "fastseek"
+        },
+        {
+          "category": 2,
+          "name": "skip_loop_filter",
+          "value": "48"
+        },
+        {
+          "category": 4,
+          "name": "reconnect",
+          "value": "1"
+        },
+        {
+          "category": 4,
+          "name": "enable-accurate-seek",
+          "value": "0"
+        },
+        {
+          "category": 4,
+          "name": "mediacodec",
+          "value": "0"
+        },
+        {
+          "category": 4,
+          "name": "mediacodec-auto-rotate",
+          "value": "0"
+        },
+        {
+          "category": 4,
+          "name": "mediacodec-handle-resolution-change",
+          "value": "0"
+        },
+        {
+          "category": 4,
+          "name": "mediacodec-hevc",
+          "value": "0"
+        },
+        {
+          "category": 1,
+          "name": "dns_cache_timeout",
+          "value": "600000000"
+        }
+      ]
+    },
+    {
+      "group": "硬解码",
+      "options": [
+        {
+          "category": 4,
+          "name": "opensles",
+          "value": "0"
+        },
+        {
+          "category": 4,
+          "name": "overlay-format",
+          "value": "842225234"
+        },
+        {
+          "category": 4,
+          "name": "framedrop",
+          "value": "1"
+        },
+        {
+          "category": 4,
+          "name": "soundtouch",
+          "value": "1"
+        },
+        {
+          "category": 4,
+          "name": "start-on-prepared",
+          "value": "1"
+        },
+        {
+          "category": 1,
+          "name": "http-detect-range-support",
+          "value": "0"
+        },
+        {
+          "category": 1,
+          "name": "fflags",
+          "value": "fastseek"
+        },
+        {
+          "category": 2,
+          "name": "skip_loop_filter",
+          "value": "48"
+        },
+        {
+          "category": 4,
+          "name": "reconnect",
+          "value": "1"
+        },
+        {
+          "category": 4,
+          "name": "enable-accurate-seek",
+          "value": "0"
+        },
+        {
+          "category": 4,
+          "name": "mediacodec",
+          "value": "1"
+        },
+        {
+          "category": 4,
+          "name": "mediacodec-auto-rotate",
+          "value": "1"
+        },
+        {
+          "category": 4,
+          "name": "mediacodec-handle-resolution-change",
+          "value": "1"
+        },
+        {
+          "category": 4,
+          "name": "mediacodec-hevc",
+          "value": "1"
+        },
+        {
+          "category": 1,
+          "name": "dns_cache_timeout",
+          "value": "600000000"
+        }
+      ]
+    }
+  ],
+  "ads": [
+    "static-mozai.4gtv.tv"
+  ]
+}
