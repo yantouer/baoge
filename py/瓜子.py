@@ -303,7 +303,15 @@ class Spider(Spider):
             url = (data or {}).get('url', '')
             if not url or not self.isVideoFormat(url):
                 return {"parse": 0, "jx": 0, "playUrl": "", "url": ""}
-            # 对齐 Gz360.java：只返回播放地址，不附带 API 的 okhttp 请求头
+            # 加密 m3u8 走 jar BgAd 去广告代理
+            if 'decry/vd' in url or '/decrypt/' in url.lower() or '.m3u8' in url.lower():
+                b64url = base64.b64encode(url.encode('utf-8')).decode('utf-8')
+                return {
+                    "parse": 0,
+                    "jx": 0,
+                    "playUrl": "",
+                    "url": f"{self.getProxyUrl()}&do=bgad&url={b64url}",
+                }
             return {"parse": 0, "jx": 0, "playUrl": "", "url": url}
         except Exception as e:
             print(f"播放解析失败: {e}")

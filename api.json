@@ -1,5 +1,5 @@
 {
-  "spider": "./jar/custom_spider.jar;md5;01b041f86da9b0aa3c7770e077d70884",
+  "spider": "./jar/custom_spider.jar;md5;d33274711650e87dd11f445fffdb667b",
   "sites": [
     {
       "key": "douban",
@@ -15,17 +15,18 @@
       "type": 3,
       "api": "csp_Gz360",
       "searchable": 1,
+      "quickSearch": 1,
       "changeable": 1
     },
     {
-      "key": "guazi_py",
-      "name": "瓜子影视(备)",
+      "key": "jpys",
+      "name": "金牌影视",
       "type": 3,
-      "api": "./py/瓜子.py",
+      "api": "csp_Jpys",
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 1,
-      "filterable": 1
+      "ext": "https://y2s52n7.com,https://m.hkybqufgh.com,https://m.sizhengxt.com,https://m.9zhoukj.com,https://m.jiabaide.cn,https://m.sdzhgt.com"
     },
     {
       "key": "duboku",
@@ -48,14 +49,14 @@
       "ext": "https://www.czzymovie.com"
     },
     {
-      "key": "jpys",
-      "name": "金牌影视",
+      "key": "guazi_py",
+      "name": "瓜子影视(备)",
       "type": 3,
-      "api": "csp_Jpys",
+      "api": "./py/瓜子.py",
       "searchable": 1,
-      "quickSearch": 1,
+      "quickSearch": 0,
       "changeable": 1,
-      "ext": "https://y2s52n7.com,https://m.hkybqufgh.com,https://m.sizhengxt.com,https://m.9zhoukj.com,https://m.jiabaide.cn,https://m.sdzhgt.com"
+      "filterable": 1
     },
     {
       "key": "jpys_py",
@@ -63,7 +64,7 @@
       "type": 3,
       "api": "./py/金牌.py",
       "searchable": 1,
-      "quickSearch": 1,
+      "quickSearch": 0,
       "changeable": 1,
       "filterable": 1,
       "ext": "https://y2s52n7.com,https://m.hkybqufgh.com,https://m.sizhengxt.com,https://m.9zhoukj.com,https://m.jiabaide.cn,https://m.sdzhgt.com"
@@ -74,7 +75,7 @@
       "type": 3,
       "api": "csp_AppRJ",
       "searchable": 1,
-      "quickSearch": 1,
+      "quickSearch": 0,
       "changeable": 1,
       "ext": {
         "url": "http://v.rbotv.cn"
@@ -86,7 +87,7 @@
       "type": 3,
       "api": "csp_SP360",
       "searchable": 1,
-      "quickSearch": 1,
+      "quickSearch": 0,
       "changeable": 0
     },
     {
