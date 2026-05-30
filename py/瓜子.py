@@ -16,28 +16,73 @@ from base.spider import Spider
 sys.path.append('..')
 
 class Spider(Spider):
-    def __init__(self):
+    API = 'https://api.w32z7vtd.com'
+    TOKEN = (
+        '97630f5f85d9f3c639fb7790ca881ef2.4cccf48dc340fe8bded39cfe4ef9ac2adb27425a9069e6cd121210fc7ba518ea8c1cc5629261e94bb6ccb66d8548449c72076c956a2fb46c253008909a6c66347eb458fe3c06d1fcc993ca03a298328f9229f1994a608250c7d1ae124c4520e6e14ce8bf9f4404119a6bbf53cf592a8df2e9145de92ec43ec87cf4bdc563f6e919fe32861b0e93b118ec37d8035fbb3c.'
+        '473433979755ccd5ec1b4581ccef76e8209b9e0c6ff819917f12dffad47d0d5e'
+    )
+    RSA_KEYS = (
+        'bMTqITVqBsbq9UjLufsQuBvRiIyfqHLqAWUx0gj0ZUe9DMNDTmJDVZzAh45AZ5LtkC39Y0DU4Ufqm/9gliIJaj7cI/dhmoM5fib5HcslzyGONEwZY5fHBvokBreGaT8bPoaxmnWdTRjRfJzYZV6T06O7GsYVa6DuKTVArb0g48Q='
+    )
+    AES_KEY = 'U823n8pKnAAbWOST'
+    AES_IV = 'wgr8N6BCs7426wf1'
+    SIGN_SALT = '*&zvdvdvddbfikkkumtmdwqppp?|4Y!s!2br'
+    SUB_DEFAULT = {
+        "1": "5",
+        "2": "12",
+        "3": "30",
+        "4": "22",
+        "64": "",
+    }
+
+    def getName(self):
+        return "瓜子"
+
+    def init(self, extend=''):
         self.name = "瓜子"
-        self.host = 'https://api.w32z7vtd.com'
-        self.token = '1be86e8e18a9fa18b2b8d5432699dad0.ac008ed650fd087bfbecf2fda9d82e9835253ef24843e6b18fcd128b10763497bcf9d53e959f5377cde038c20ccf9d17f604c9b8bb6e61041def86729b2fc7408bd241e23c213ac57f0226ee656e2bb0a583ae0e4f3bf6c6ab6c490c9a6f0d8cdfd366aacf5d83193671a8f77cd1af1ff2e9145de92ec43ec87cf4bdc563f6e919fe32861b0e93b118ec37d8035fbb3c.59dd05c5d9a8ae726528783128218f15fe6f2c0c8145eddab112b374fcfe3d79'
+        self.host = self.API
+        self.token = self.TOKEN
         self.header = {
             'Cache-Control': 'no-cache',
             'Version': '2406025',
-            'PackageName': 'com.uf076bf0c246.qe439f0d5e.m8aaf56b725a.ifeb647346f',
+            'PackageName': 'com.j64f4b21072.ha69699879.dfea0a9826ba.ibf50c9b1d',
             'Ver': '1.9.2',
             'Referer': self.host,
             'Content-Type': 'application/x-www-form-urlencoded',
-            'User-Agent': 'okhttp/3.12.0'
+            'User-Agent': 'okhttp/3.12.0',
         }
-        # 添加缓存机制
         self.cache = {}
-        self.cache_timeout = 300  # 5分钟缓存
-        
-    def getName(self):
-        return self.name
+        self.cache_timeout = 300
 
-    def init(self, extend=''):
-        pass
+    VIDEO_UA = (
+        "Mozilla/5.0 (Linux; Android 13) AppleWebKit/537.36 "
+        "(KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+    )
+
+    def _play_headers(self):
+        return {"User-Agent": self.VIDEO_UA, "Referer": self.host + "/"}
+
+    def _parse_param_id(self, id_str):
+        body = {}
+        for part in (id_str or "").split("&"):
+            if "=" in part:
+                k, v = part.split("=", 1)
+                body[k] = v
+        return body
+
+    def _norm_extend(self, extend):
+        if not extend or extend is True:
+            return {}
+        if isinstance(extend, str):
+            if not extend.strip():
+                return {}
+            try:
+                return json.loads(extend)
+            except Exception:
+                return {}
+        if isinstance(extend, dict):
+            return extend
+        return {}
 
     def homeContent(self, filter):
         result = {}
@@ -111,14 +156,16 @@ class Spider(Spider):
 
     def categoryContent(self, tid, pg, filter, extend):
         videos = []
+        ext = self._norm_extend(extend)
         try:
             body = {
-                "area": extend.get('area', '0'),
-                "year": extend.get('year', '0'),
-                "pageSize": "30",
-                "sort": extend.get('sort', 'd_id'),
+                "tid": tid,
                 "page": str(pg),
-                "tid": tid
+                "sort": ext.get('sort', 'd_id'),
+                "area": ext.get('area', '0'),
+                "sub": ext.get('sub', self.SUB_DEFAULT.get(str(tid), '0')),
+                "year": ext.get('year', '0'),
+                "pageSize": "30",
             }
             
             cache_key = f"category_{tid}_{pg}_{hash(str(body))}"
@@ -130,7 +177,7 @@ class Spider(Spider):
                     remarks = '电影' if vod_continu == 0 else f'更新至{vod_continu}集'
                     
                     video = {
-                        "vod_id": f"{item.get('vod_id', '')}/{vod_continu}",
+                        "vod_id": str(item.get('vod_id', '')),
                         "vod_name": item.get('vod_name', ''),
                         "vod_pic": item.get('vod_pic', ''),
                         "vod_remarks": remarks
@@ -149,31 +196,43 @@ class Spider(Spider):
 
     def detailContent(self, ids):
         try:
-            vod_id = ids[0].split('/')[0]
-            
-            # 获取视频详情
+            vod_id = str(ids[0]).split('/')[0]
+
             t = str(int(time.time()))
             body1 = {
-                "token_id": "1649412",
+                "token_id": "1009464",
                 "vod_id": vod_id,
                 "mobile_time": t,
-                "token": self.token
+                "token": self.token,
             }
             qdata = self.get_data(body1, '/App/IndexPlay/playInfo')
-            
-            # 获取播放列表
+
             body2 = {
                 "vurl_cloud_id": "2",
-                "vod_d_id": vod_id
+                "vod_d_id": vod_id,
             }
             jdata = self.get_data(body2, '/App/Resource/Vurl/show')
-            
+
             if not qdata or 'vodInfo' not in qdata:
                 return {'list': []}
-                
+
             vod = qdata['vodInfo']
-            
-            # 构建视频信息
+            sites = {}
+
+            if jdata and 'list' in jdata:
+                for ep in jdata['list']:
+                    play = ep.get('play') or {}
+                    title = ep.get('title') or '播放'
+                    for line, item in play.items():
+                        if not isinstance(item, dict):
+                            continue
+                        if str(item.get('show_type', '')) == '2':
+                            continue
+                        param = (item.get('param') or '').strip()
+                        if not param:
+                            continue
+                        sites.setdefault(line, []).append(f"{title}${param}")
+
             video_detail = {
                 "vod_id": vod_id,
                 "vod_name": vod.get('vod_name', ''),
@@ -183,33 +242,14 @@ class Spider(Spider):
                 "vod_actor": vod.get('vod_actor', ''),
                 "vod_director": vod.get('vod_director', ''),
                 "vod_content": vod.get('vod_use_content', '').strip(),
-                "vod_play_from": "嗷呜要吃瓜"
             }
-            
-            # 构建播放列表
-            play_list = []
-            if jdata and 'list' in jdata:
-                for index, item in enumerate(jdata['list']):
-                    if 'play' in item:
-                        n = []  # 播放源名称
-                        p = []  # 播放参数
-                        for key, value in item['play'].items():
-                            if 'param' in value and value['param']:
-                                n.append(key)
-                                p.append(value['param'])
-                        
-                        if p:
-                            play_name = str(index + 1)
-                            if len(jdata['list']) == 1:
-                                play_name = vod.get('vod_name', '')
-                            
-                            play_url = f"{p[-1]}||{'@'.join(n)}"
-                            play_list.append(f"{play_name}${play_url}")
-            
-            video_detail["vod_play_url"] = "#".join(play_list)
-            
+            if sites:
+                ordered = sorted(sites.keys(), key=lambda x: int(x) if str(x).isdigit() else 0, reverse=True)
+                video_detail["vod_play_from"] = '$$$'.join(ordered)
+                video_detail["vod_play_url"] = '$$$'.join('#'.join(sites[k]) for k in ordered)
+
             return {'list': [video_detail]}
-            
+
         except Exception as e:
             print(f"获取详情失败: {e}")
             return {'list': []}
@@ -236,7 +276,7 @@ class Spider(Spider):
                     remarks = '电影' if vod_continu == 0 else f'更新至{vod_continu}集'
                     
                     video = {
-                        "vod_id": f"{item.get('vod_id', '')}/{vod_continu}",
+                        "vod_id": str(item.get('vod_id', '')),
                         "vod_name": item.get('vod_name', ''),
                         "vod_pic": item.get('vod_pic', ''),
                         "vod_remarks": remarks
@@ -255,58 +295,74 @@ class Spider(Spider):
 
     def playerContent(self, flag, id, vipFlags):
         try:
-            # 解析播放信息
-            parts = id.split('||')
-            if len(parts) < 2:
-                return {"parse": 0, "playUrl": "", "url": ""}
-            
-            param_str = parts[0]
-            resolutions = parts[1].split('@') if len(parts) > 1 else []
-            
-            # 解析参数
-            params = {}
-            for pair in param_str.split('&'):
-                if '=' in pair:
-                    key, value = pair.split('=', 1)
-                    params[key] = value
-            
-            # 获取播放链接
-            if resolutions:
-                # 分辨率从大到小排序
-                resolutions.sort(key=lambda x: int(x) if x.isdigit() else 0, reverse=True)
-                
-                # 使用最大分辨率
-                params['resolution'] = resolutions[0]
-                body = params
-                
-                start_time = time.time()
-                data = self.get_data(body, '/App/Resource/VurlDetail/showOne', use_cache=False)
-                end_time = time.time()
-                print(f"播放链接获取耗时: {end_time - start_time:.2f}秒")
-                
-                if data and 'url' in data:
-                    return {
-                        "parse": 0,
-                        "playUrl": "",
-                        "url": data['url'],
-                        "header": json.dumps(self.header)
-                    }
-            
-            return {"parse": 0, "playUrl": "", "url": ""}
-            
+            body = self._parse_param_id(id)
+            if not body:
+                return {"parse": 0, "jx": 0, "playUrl": "", "url": ""}
+
+            data = self.get_data(body, '/App/Resource/VurlDetail/showOne', use_cache=False)
+            url = (data or {}).get('url', '')
+            if not url or not self.isVideoFormat(url):
+                return {"parse": 0, "jx": 0, "playUrl": "", "url": ""}
+            # 对齐 Gz360.java：只返回播放地址，不附带 API 的 okhttp 请求头
+            return {"parse": 0, "jx": 0, "playUrl": "", "url": url}
         except Exception as e:
             print(f"播放解析失败: {e}")
-            return {"parse": 0, "playUrl": "", "url": ""}
+            return {"parse": 0, "jx": 0, "playUrl": "", "url": ""}
 
     def isVideoFormat(self, url):
-        video_formats = ['.m3u8', '.mp4', '.avi', '.mkv', '.flv', '.ts']
-        return any(url.lower().endswith(fmt) for fmt in video_formats)
+        if not url:
+            return False
+        low = url.lower()
+        if any(x in low for x in ('.m3u8', '.mp4', '.flv', '.ts', 'decry/vd', '/vd/', 'm3u8')):
+            return True
+        return any(low.endswith(fmt) for fmt in ('.avi', '.mkv'))
 
     def manualVideoCheck(self):
         pass
 
     def localProxy(self, params):
-        return None
+        try:
+            from urllib.parse import urljoin
+            raw = params.get('url') or ''
+            if not raw:
+                return None
+            try:
+                url = base64.b64decode(raw).decode('utf-8')
+            except Exception:
+                url = raw
+            uas = [
+                self.VIDEO_UA,
+                "Gz360/1.9.2",
+                "Dalvik/2.1.0 (Linux; U; Android 13)",
+            ]
+            text = ''
+            for ua in uas:
+                rsp = self.fetch(url, headers={"User-Agent": ua, "Referer": self.host + "/"}, timeout=15)
+                text = rsp.text or ''
+                if text and not any('xn--' in ln for ln in text.splitlines() if ln.strip() and not ln.startswith('#')):
+                    break
+            if not text:
+                return None
+            base = url.rsplit('/', 1)[0] + '/'
+            lines = []
+            for line in text.splitlines():
+                s = line.strip()
+                if not s:
+                    continue
+                if s.startswith('#'):
+                    lines.append(s)
+                    continue
+                if 'xn--' in s:
+                    continue
+                if not s.startswith('http'):
+                    s = urljoin(base, s)
+                lines.append(s)
+            if not any(not x.startswith('#') for x in lines):
+                return None
+            return [200, 'application/vnd.apple.mpegurl', '\n'.join(lines) + '\n']
+        except Exception as e:
+            print(f"localProxy失败: {e}")
+            return None
 
     def aes_encrypt(self, text, key, iv):
         """AES加密"""
@@ -378,15 +434,15 @@ class Spider(Spider):
             start_time = time.time()
             
             # AES加密请求数据
-            request_key = self.aes_encrypt(json.dumps(data), 'mvXBSW7ekreItNsT', '2U3IrJL8szAKp0Fj')
+            request_key = self.aes_encrypt(json.dumps(data), self.AES_KEY, self.AES_IV)
             if not request_key:
                 return None
             
             # 生成签名
             t = str(int(time.time()))
-            keys = "Qmxi5ciWXbQzkr7o+SUNiUuQxQEf8/AVyUWY4T/BGhcXBIUz4nOyHBGf9A4KbM0iKF3yp9M7WAY0rrs5PzdTAOB45plcS2zZ0wUibcXuGJ29VVGRWKGwE9zu2vLwhfgjTaaDpXo4rby+7GxXTktzJmxvneOUdYeHi+PZsThlvPI="
-            sign_str = f"token_id=,token={self.token},phone_type=1,request_key={request_key},app_id=1,time={t},keys={keys}*&zvdvdvddbfikkkumtmdwqppp?|4Y!s!2br"
-            signature = hashlib.md5(sign_str.encode()).hexdigest()
+            keys = self.RSA_KEYS
+            sign_str = f"token_id=,token={self.token},phone_type=1,request_key={request_key},app_id=1,time={t},keys={keys}{self.SIGN_SALT}"
+            signature = hashlib.md5(sign_str.encode()).hexdigest().upper()
             
             # 构建请求体
             body = {
@@ -394,7 +450,7 @@ class Spider(Spider):
                 'token_id': '',
                 'phone_type': '1',
                 'time': t,
-                'phone_model': 'xiaomi-22021211rc',
+                'phone_model': 'xiaomi-2206123sc',
                 'keys': keys,
                 'request_key': request_key,
                 'signature': signature,

@@ -18,12 +18,78 @@ class Spider(Spider):
         return "Aidianying"
 
     def init(self, extend):
-        self.home_url = 'https://m.sdzhgt.com/'
-        self.ua = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-        self.error_url = "https://sf1-cdn-tos.huoshanstatic.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-720p.mp4"
+        self.ua = (
+            "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 "
+            "(KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+        )
+        self.error_url = (
+            "https://sf1-cdn-tos.huoshanstatic.com/obj/media-fe/xgplayer_doc_video/mp4/xgplayer-demo-720p.mp4"
+        )
+        candidates = []
+        if extend:
+            candidates.extend([x.strip() for x in str(extend).split(",") if x.strip()])
+        candidates.extend([
+            "https://y2s52n7.com",
+            "https://m.hkybqufgh.com",
+            "https://m.sizhengxt.com",
+            "https://m.9zhoukj.com",
+            "https://m.jiabaide.cn",
+            "https://m.610pkea.com",
+            "https://m.sdzhgt.com",
+        ])
+        self.home_url = self._pick_host(candidates)
 
-    def getDependence(self):
-        return []
+    def _pick_host(self, urls):
+        headers = {"User-Agent": self.ua}
+        for raw in urls:
+            base = raw.strip().rstrip("/")
+            if not base.startswith("http"):
+                base = "https://" + base
+            try:
+                r = requests.get(
+                    f"{base}/vod/show/id/1/page/1",
+                    headers={**headers, "Referer": base + "/"},
+                    timeout=10,
+                )
+                if r.status_code == 200 and "vodId" in r.text:
+                    return base + "/"
+            except Exception:
+                continue
+        return "https://y2s52n7.com/"
+
+    def _sign_headers(self, sign_data):
+        t = str(int(time.time() * 1000))
+        data = f"{sign_data}&key=cb808529bae6b6be45ecfab29a4889bc&t={t}"
+        data_sha1 = hashlib.sha1(hashlib.md5(data.encode()).hexdigest().encode()).hexdigest()
+        return {
+            "User-Agent": self.ua,
+            "referer": self.home_url,
+            "t": t,
+            "sign": data_sha1,
+        }
+
+    def _parse_list_page(self, html):
+        videos = []
+        for vid, name, pic in re.findall(
+            r'vodId\\":(\d+).*?vodName\\":\\"([^\\]+)\\".*?vodPic\\":\\"([^\\]+)\\"',
+            html,
+        ):
+            videos.append(
+                {
+                    "vod_id": str(vid),
+                    "vod_name": name,
+                    "vod_pic": pic,
+                    "vod_remarks": "",
+                }
+            )
+        return videos
+
+    def _norm_ext(self, ext):
+        if not ext or ext is True:
+            return {}
+        if isinstance(ext, str):
+            return {}
+        return ext if isinstance(ext, dict) else {}
 
     def isVideoFormat(self, url):
         pass
@@ -296,7 +362,7 @@ class Spider(Spider):
             for i in data_list:
                 video_list.append(
                     {
-                        'vod_id': i['vodId'],
+                        'vod_id': str(i['vodId']),
                         'vod_name': i['vodName'],
                         'vod_pic': i['vodPic'],
                         'vod_remarks': i['vodVersion'] if i['typeId1'] == 1 else i['vodRemarks']
@@ -316,55 +382,34 @@ class Spider(Spider):
         }
 
     def categoryContent(self, cid, page, filter, ext):
-        t = cid
-        _type = ext.get('type') if ext.get('type') else ''
-        __class = ext.get('class') if ext.get('class') else ''
-        _area = ext.get('area') if ext.get('area') else ''
-        _year = ext.get('year') if ext.get('year') else ''
-        _lang = ext.get('lang') if ext.get('lang') else ''
-        _by = ext.get('by') if ext.get('by') else ''
-        video_list = []
-        h = {
-            "User-Agent": self.ua,
-            'referer': self.home_url,
-        }
+        ext = self._norm_ext(ext)
+        _type = ext.get('type') or ''
+        __class = ext.get('class') or ''
+        _area = ext.get('area') or ''
+        _year = ext.get('year') or ''
+        _lang = ext.get('lang') or ''
+        _by = ext.get('by') or ''
+        h = {"User-Agent": self.ua, "referer": self.home_url}
+        url = (
+            f'{self.home_url}vod/show/id/{cid}{_type}{__class}{_area}{_year}{_lang}{_by}/page/{page}'
+        )
         try:
-            res = requests.get(
-                f'{self.home_url}/vod/show/id/{t}{_type}{__class}{_area}{_year}{_lang}{_by}/page/{page}',
-                headers=h)
-            aa = re.findall(r'\\"list\\":(.*?)}}}]', res.text)
-            if not aa:
-                return {'list': [], 'parse': 0, 'jx': 0}
-            bb = aa[0].replace('\\"', '"')
-            data_list = json.loads(bb)
-            for i in data_list:
-                video_list.append(
-                    {
-                        'vod_id': i['vodId'],
-                        'vod_name': i['vodName'],
-                        'vod_pic': i['vodPic'],
-                        'vod_remarks': i['vodVersion'] if i['typeId1'] == 1 else i['vodRemarks']
-                    }
-                )
+            res = requests.get(url, headers=h, timeout=15)
+            video_list = self._parse_list_page(res.text)
         except requests.RequestException as e:
-            return {'list': [], 'msg': e}
+            return {'list': [], 'msg': str(e)}
         return {'list': video_list, 'parse': 0, 'jx': 0}
 
     def detailContent(self, did):
-        ids = did[0]
+        ids = str(did[0])
         video_list = []
-        t = str(int(time.time() * 1000))
-        # t = '1723292093234'
-        data = f'id={ids}&key=cb808529bae6b6be45ecfab29a4889bc&t={t}'
-        data_md5 = hashlib.md5(data.encode()).hexdigest()
-        data_sha1 = hashlib.sha1(data_md5.encode()).hexdigest()
-        h = {
-            "User-Agent": self.ua,
-            'referer': self.home_url,
-            't': t, 'sign': data_sha1
-        }
+        h = self._sign_headers(f'id={ids}')
         try:
-            res = requests.get(f'{self.home_url}/api/mw-movie/anonymous/video/detail?id={ids}', headers=h)
+            res = requests.get(
+                f'{self.home_url}/api/mw-movie/anonymous/video/detail?id={ids}',
+                headers=h,
+                timeout=12,
+            )
             data = res.json()['data']
             play_list = data['episodeList']
             vod_play_url = []
@@ -396,25 +441,18 @@ class Spider(Spider):
     def searchContent(self, key, quick, page='1'):
         wd = key
         video_list = []
-        t = str(int(time.time() * 1000))
-        data = f'keyword={wd}&pageNum={page}&pageSize=12&key=cb808529bae6b6be45ecfab29a4889bc&t={t}'
-        data_md5 = hashlib.md5(data.encode()).hexdigest()
-        data_sha1 = hashlib.sha1(data_md5.encode()).hexdigest()
-        h = {
-            "User-Agent": self.ua,
-            'referer': self.home_url,
-            't': t, 'sign': data_sha1
-        }
+        h = self._sign_headers(f'keyword={wd}&pageNum={page}&pageSize=12')
         try:
             response = requests.get(
                 f'{self.home_url}/api/mw-movie/anonymous/video/searchByWord?keyword={wd}&pageNum={page}&pageSize=12',
                 headers=h,
+                timeout=12,
             )
             data_list = response.json()['data']['result']['list']
             for i in data_list:
                 video_list.append(
                     {
-                        'vod_id': i['vodId'],
+                        'vod_id': str(i['vodId']),
                         'vod_name': i['vodName'],
                         'vod_pic': i['vodPic'],
                         'vod_remarks': i['vodVersion'] if i['typeId1'] == 1 else i['vodRemarks']
@@ -430,23 +468,14 @@ class Spider(Spider):
         data = url.split('/')
         _id = data[0]
         _nid = data[1]
-        t = str(int(time.time() * 1000))
-        # t = '1723292093234'
-        data = f'id={_id}&nid={_nid}&key=cb808529bae6b6be45ecfab29a4889bc&t={t}'
-        data_md5 = hashlib.md5(data.encode()).hexdigest()
-        data_sha1 = hashlib.sha1(data_md5.encode()).hexdigest()
-        h = {
-            "User-Agent": self.ua,
-            'referer': self.home_url,
-            't': t, 'sign': data_sha1
-        }
-        h2 = {
-            "User-Agent": self.ua,
-        }
+        h = self._sign_headers(f'id={_id}&nid={_nid}')
+        h2 = {"User-Agent": self.ua}
         try:
             res = requests.get(
                 f'{self.home_url}/api/mw-movie/anonymous/v2/video/episode/url?id={_id}&nid={_nid}',
-                headers=h)
+                headers=h,
+                timeout=12,
+            )
             play_url = res.json()['data']['list'][0]['url']
         except requests.RequestException as e:
             return {"url": play_url, "header": h2, "parse": 0, "jx": 0}
