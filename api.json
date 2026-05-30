@@ -231,6 +231,137 @@
       "changeable": 1
     },
     {
+      "key": "qwei",
+      "name": "七味影视",
+      "type": 3,
+      "api": "./py/七味.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "filterable": 1
+    },
+    {
+      "key": "xintiao",
+      "name": "心跳影视",
+      "type": 3,
+      "api": "./py/心跳.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "fengye",
+      "name": "枫叶影院",
+      "type": 3,
+      "api": "./py/枫叶影院.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "filterable": 1
+    },
+    {
+      "key": "ddgui",
+      "name": "达达龟影院",
+      "type": 3,
+      "api": "./py/达达龟影院.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "filterable": 1
+    },
+    {
+      "key": "lgbt",
+      "name": "两个BT",
+      "type": 3,
+      "api": "./py/两个BT.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "filterable": 1
+    },
+    {
+      "key": "nunu",
+      "name": "努努影院",
+      "type": 3,
+      "api": "./py/努努影院.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "kvm4",
+      "name": "4KVM",
+      "type": 3,
+      "api": "./py/4KVM.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "chabei",
+      "name": "茶杯狐",
+      "type": 3,
+      "api": "./py/茶杯狐影视.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "ysgc",
+      "name": "影视工厂",
+      "type": 3,
+      "api": "./py/影视工厂.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1,
+      "filterable": 1
+    },
+    {
+      "key": "fantuan",
+      "name": "饭团影视",
+      "type": 3,
+      "api": "./py/饭团影视.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "maitian",
+      "name": "麦田影院",
+      "type": 3,
+      "api": "./py/麦田影院.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "lieshou",
+      "name": "猎手影视",
+      "type": 3,
+      "api": "./py/猎手影视.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "qiyou",
+      "name": "奇优动漫",
+      "type": 3,
+      "api": "./py/奇优动漫.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
+      "key": "dmbashi",
+      "name": "动漫巴士",
+      "type": 3,
+      "api": "./py/动漫巴士.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 1
+    },
+    {
       "key": "manbo",
       "name": "曼波动漫",
       "type": 3,
