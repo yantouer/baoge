@@ -3,7 +3,7 @@
   "sites": [
     {
       "key": "douban",
-      "name": "宝哥推荐",
+      "name": "豆瓣",
       "type": 3,
       "api": "csp_Douban",
       "searchable": 0,
@@ -199,6 +199,60 @@
       "searchable": 1,
       "quickSearch": 1,
       "changeable": 0
+    },
+    {
+      "key": "aiting",
+      "name": "爱听音乐",
+      "type": 3,
+      "api": "./py/爱听音乐.py",
+      "searchable": 1,
+      "quickSearch": 1,
+      "changeable": 0,
+      "style": {
+        "type": "list"
+      }
+    },
+    {
+      "key": "xydj",
+      "name": "星芽短剧",
+      "type": 3,
+      "api": "./py/星芽短剧.py",
+      "searchable": 1,
+      "changeable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "jwdj",
+      "name": "剧王短剧",
+      "type": 3,
+      "api": "./py/剧王短剧.py",
+      "searchable": 1,
+      "changeable": 1,
+      "quickSearch": 1,
+      "filterable": 1
+    },
+    {
+      "key": "wlkc",
+      "name": "网络直播",
+      "type": 3,
+      "api": "./py/网络直播.py",
+      "searchable": 0,
+      "changeable": 0,
+      "style": {
+        "type": "list"
+      }
+    },
+    {
+      "key": "bililive",
+      "name": "哔哩直播",
+      "type": 3,
+      "api": "./py/哔哩直播.py",
+      "searchable": 0,
+      "changeable": 0,
+      "style": {
+        "type": "list"
+      }
     },
     {
       "key": "jianpian",
