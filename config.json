@@ -562,12 +562,12 @@
       "key": "czsapp",
       "name": "厂长影视",
       "type": 3,
-      "api": "csp_Czsapp",
+      "api": "./py/厂长资源.py",
       "searchable": 1,
       "quickSearch": 1,
       "filterable": 1,
       "changeable": 1,
-      "ext": "https://www.czzymovie.com"
+      "ext": "https://czzyv.com,https://www.cz4k.com,https://www.czzy89.com,https://www.czzymovie.com"
     },
     {
       "key": "guazi_py",
@@ -592,12 +592,13 @@
     },
     {
       "key": "chaoliu",
-      "name": "潮流影视",
+      "name": "潮流影视(失效)",
       "type": 3,
       "api": "csp_AppRJ",
-      "searchable": 1,
+      "searchable": 0,
       "quickSearch": 0,
-      "changeable": 1,
+      "changeable": 0,
+      "hide": 1,
       "ext": {
         "url": "http://v.rbotv.cn"
       }
