@@ -890,6 +890,11 @@
   ],
   "lives": [
     {
+      "name": "宝哥直播源",
+      "type": 0,
+      "url": " https://zb.ifree.fun/zhibo/live.m3u"
+    },
+    {
       "name": "IPTV",
       "type": 0,
       "url": "https://gongdian.top/tv/iptv",
@@ -905,11 +910,6 @@
       "name": "冰茶直播源",
       "type": 0,
       "url": "https://bc.188766.xyz/?url=https://live.188766.xyz&mima=bingcha1130"
-    },
-    {
-      "name": "宝哥内网源",
-      "type": 0,
-      "url": "https://fun.ifree.fun/live.m3u"
     }
   ],
   "parses": [
