@@ -16,12 +16,27 @@ class Spider(Spider):
         return "厂长资源"
 
     def init(self, extend=""):
-        host = (extend or "https://www.czzymovie.com").strip().rstrip("/")
-        if host and not host.startswith("http"):
-            host = "https://" + host
-        self.host = host
+        default = "https://czzyv.com,https://www.cz4k.com,https://www.czzy89.com,https://www.czzymovie.com"
+        hosts = [h.strip().rstrip("/") for h in (extend or default).split(",") if h.strip()]
+        if not hosts:
+            hosts = ["https://czzyv.com"]
         self._vod_name = ""
         self._ep_map = {}
+        self.host = None
+        for host in hosts:
+            if host and not host.startswith("http"):
+                host = "https://" + host
+            if self._setup_host(host):
+                self.host = host
+                break
+        if not self.host:
+            host = hosts[0]
+            if not host.startswith("http"):
+                host = "https://" + host
+            self._setup_host(host)
+            self.host = host
+
+    def _setup_host(self, host):
         self.headers = {
             "User-Agent": (
                 "Mozilla/5.0 (Linux; Android 13; SM-S908B) AppleWebKit/537.36 "
@@ -29,15 +44,22 @@ class Spider(Spider):
             ),
             "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
             "Accept-Language": "zh-CN,zh;q=0.9",
-            "Referer": self.host + "/",
+            "Referer": host + "/",
         }
         try:
-            rsp = self.fetch(self.host, headers=self.headers, timeout=12)
+            rsp = self.fetch(host, headers=self.headers, timeout=12)
+            html = rsp.text or ""
             cookies = rsp.headers.get("Set-Cookie") or rsp.headers.get("set-cookie")
             if cookies:
                 self.headers["Cookie"] = cookies.split(";")[0]
+            return (
+                "bt_img" in html
+                or "movie_bt" in html
+                or "mi_cont" in html
+                or (rsp.status_code == 200 and len(html) > 8000)
+            )
         except Exception:
-            pass
+            return False
 
     def isVideoFormat(self, url):
         pass
