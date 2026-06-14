@@ -13,6 +13,7 @@ DEFAULT_BASES = (
     "http://43.129.218.15:6666",
 )
 DEFAULT_SPORT_BASE = "http://129.211.6.182:8855/1/"
+SPORT_CATEGORY_PRIORITY = ("首页", "世界杯", "足球", "篮球", "NBA")
 TV_RC4_KEY = "237296kltvv"
 SP_RC4_KEY = "Gmf9LAAeTVdqKelS"
 UA = (
@@ -92,6 +93,33 @@ def _parse_tv_lines(text: str):
     return items
 
 
+def _parse_sport_categories(text: str):
+    items = []
+    for blk in _split_kltvv(text):
+        f = _kltvv_fields(blk)
+        if f.get("mz") and f.get("id"):
+            items.append({"name": f["mz"], "cat_id": f["id"]})
+    return items
+
+
+def _sort_sport_categories(cats):
+    pri = {n: i for i, n in enumerate(SPORT_CATEGORY_PRIORITY)}
+    indexed = list(enumerate(cats))
+
+    def key(item):
+        idx, c = item
+        return (pri.get(c.get("name", ""), 100 + idx), idx)
+
+    return [c for _, c in sorted(indexed, key=key)]
+
+
+def _sport_api_path(cat_id: str, *, action: str = "list") -> str:
+    cat_id = (cat_id or "").strip()
+    if action == "detail":
+        return f"zc/id.php?vid=1&u={cat_id}"
+    return f"zc/api.php?vid=1&id={cat_id}"
+
+
 def _parse_sport_lines(text: str):
     items = []
     seen = set()
@@ -127,19 +155,35 @@ class Spider(BaseSpider):
         if self._sport_ready:
             return
         for base in self.bases:
-            try:
-                cfg = self.fetch(
-                    f"{base.rstrip('/')}/api/api.php?bb=9.9",
-                    headers=self.headers,
-                    timeout=12,
-                ).text
-                m = re.search(r"url2#([^#]+)#", cfg)
-                if m and m.group(1).startswith("http"):
-                    self.sport_base = m.group(1).rstrip("/") + "/"
-                    break
-            except Exception:
-                pass
+            for bb in ("10.0", "9.9", "9.0"):
+                try:
+                    cfg = self.fetch(
+                        f"{base.rstrip('/')}/api/api.php?bb={bb}",
+                        headers=self.headers,
+                        timeout=12,
+                    ).text
+                    m = re.search(r"url2#([^#]+)#", cfg)
+                    if m and m.group(1).startswith("http"):
+                        self.sport_base = m.group(1).rstrip("/") + "/"
+                        break
+                except Exception:
+                    pass
+            if self.sport_base != DEFAULT_SPORT_BASE.rstrip("/") + "/":
+                break
         self._sport_ready = True
+
+    def _load_sport_classes(self):
+        self._ensure_sport_base()
+        raw = self._fetch_sport("zc/vid.php?vid=1")
+        sport_items = []
+        for cat in _sort_sport_categories(_parse_sport_categories(raw)):
+            sport_items.append(
+                {
+                    "type_id": self._make_tid("sp", cat["cat_id"]),
+                    "type_name": f"[体育]{cat['name']}",
+                }
+            )
+        return sport_items
 
     def _fetch_tv(self, path: str) -> str:
         last_err = None
@@ -210,17 +254,7 @@ class Spider(BaseSpider):
         except Exception:
             pass
         try:
-            self._ensure_sport_base()
-            raw = self._fetch_sport("zc/vid.php?vid=1")
-            for blk in _split_kltvv(raw):
-                f = _kltvv_fields(blk)
-                if f.get("mz") and f.get("id"):
-                    sport_items.append(
-                        {
-                            "type_id": self._make_tid("sp", f["id"]),
-                            "type_name": f"[体育]{f['mz']}",
-                        }
-                    )
+            sport_items = self._load_sport_classes()
         except Exception:
             pass
         classes = self._sort_home_classes(tv_items, sport_items)
@@ -264,7 +298,7 @@ class Spider(BaseSpider):
 
     def _sport_matches(self, cat_id, pg):
         try:
-            raw = self._fetch_sport(f"zc/api.php?vid=1&id={cat_id}")
+            raw = self._fetch_sport(_sport_api_path(cat_id))
             items = []
             for blk in _split_kltvv(raw):
                 f = _kltvv_fields(blk)
@@ -328,7 +362,7 @@ class Spider(BaseSpider):
 
     def _sport_detail(self, match_id):
         try:
-            raw = self._fetch_sport(f"zc/id.php?vid=1&u={match_id}")
+            raw = self._fetch_sport(_sport_api_path(match_id, action="detail"))
             referer = ""
             au_m = re.search(r"au#([^#]+)", raw)
             if au_m:
@@ -404,20 +438,36 @@ class Spider(BaseSpider):
             pass
         try:
             self._ensure_sport_base()
-            raw = self._fetch_sport("zc/api.php?vid=1&id=1&type=4")
-            if not _split_kltvv(raw):
-                raw = self._fetch_sport("zc/api.php?vid=1&id=0&type=1")
-            for blk in _split_kltvv(raw):
-                f = _kltvv_fields(blk)
-                if f.get("mz") and f.get("id") and key in f["mz"]:
-                    out.append(
-                        {
-                            "vod_id": self._make_tid("spm", f["id"]),
-                            "vod_name": f["mz"],
-                            "vod_pic": "",
-                            "vod_remarks": (f.get("sj") or "体育").split("-")[-1],
-                        }
-                    )
+            for cat in _sort_sport_categories(_parse_sport_categories(
+                self._fetch_sport("zc/vid.php?vid=1")
+            )):
+                raw = self._fetch_sport(_sport_api_path(cat["cat_id"]))
+                for blk in _split_kltvv(raw):
+                    f = _kltvv_fields(blk)
+                    if f.get("mz") and f.get("id") and key in f["mz"]:
+                        out.append(
+                            {
+                                "vod_id": self._make_tid("spm", f["id"]),
+                                "vod_name": f["mz"],
+                                "vod_pic": "",
+                                "vod_remarks": (f.get("sj") or "体育").split("-")[-1],
+                            }
+                        )
+            if not out:
+                raw = self._fetch_sport("zc/api.php?vid=1&id=1&type=4")
+                if not _split_kltvv(raw):
+                    raw = self._fetch_sport("zc/api.php?vid=1&id=0&type=1")
+                for blk in _split_kltvv(raw):
+                    f = _kltvv_fields(blk)
+                    if f.get("mz") and f.get("id") and key in f["mz"]:
+                        out.append(
+                            {
+                                "vod_id": self._make_tid("spm", f["id"]),
+                                "vod_name": f["mz"],
+                                "vod_pic": "",
+                                "vod_remarks": (f.get("sj") or "体育").split("-")[-1],
+                            }
+                        )
         except Exception:
             pass
         return {"list": out}
